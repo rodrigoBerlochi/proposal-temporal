@@ -4,7 +4,7 @@ TESTS=${@:-"./*/**/*.js"}
 
 virtualenv -p python3 venv
 source venv/bin/activate
-pip install ijson
+#pip install ijson
 
 export NODE_PATH=$PWD/node_modules
 npm run build
@@ -12,8 +12,8 @@ if [ ! -d "test262" ]; then
   git clone --depth 1 https://github.com/tc39/test262.git
 else
   cd ./test262
-  git fetch origin
-  git merge --ff-only origin/master
+#  git fetch origin
+#  git merge --ff-only origin/master
   cd ..
 fi
 
@@ -30,7 +30,7 @@ if [ "$(uname)" = 'Darwin' ]; then
 else
   threads=$(nproc --ignore 1)
 fi
-if [ $threads -gt 2 ]; then threads=2; fi
+#if [ $threads -gt 2 ]; then threads=2; fi
 
 test262-harness \
   -t $threads \
