@@ -8,6 +8,8 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
+  "get timeZone.getDateTimeFor",
+  "call timeZone.getDateTimeFor",
   "get timeZone.toString",
   "call timeZone.toString",
   "get name.toString",

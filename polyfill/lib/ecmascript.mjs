@@ -565,7 +565,7 @@ export const ES = ObjectAssign({}, ES2019, {
     if (from === undefined) {
       from = GetIntrinsic('%Temporal.TimeZone.from%');
     }
-    return ES.Call(from, TemporalTimeZone, temporalTimeZoneLike);
+    return ES.Call(from, TemporalTimeZone, [temporalTimeZoneLike]);
   },
   GetOffsetStringFor: (timeZone, absolute) => {
     let getOffsetStringFor = timeZone.getOffsetStringFor;
@@ -576,21 +576,21 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   GetTemporalDateTimeFor: (timeZone, absolute, calendar) => {
     let getDateTimeFor = timeZone.getDateTimeFor;
-    if (getDateTimeFor === 'undefined') {
+    if (getDateTimeFor === undefined) {
       getDateTimeFor = GetIntrinsic('%Temporal.TimeZone.prototype.getDateTimeFor%');
     }
-    return ES.Call(getDateTimeFor, timeZone, [this, calendar]);
+    return ES.Call(getDateTimeFor, timeZone, [absolute, calendar]);
   },
   TimeZoneToString: (timeZone) => {
     let toString = timeZone.toString;
     if (toString === undefined) {
       toString = GetIntrinsic('%Temporal.TimeZone.prototype.toString%');
     }
-    return ES.ToString(ES.Call(toString, timeZone));
+    return ES.ToString(ES.Call(toString, timeZone, []));
   },
   ISOTimeZoneString: (timeZone, absolute) => {
-    const offset = ES.GetOffsetStringFor(timeZone, absolute);
     const name = ES.TimeZoneToString(timeZone);
+    const offset = ES.GetOffsetStringFor(timeZone, absolute);
 
     if (name === 'UTC') {
       return 'Z';
@@ -626,13 +626,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return `${secs}${post}`;
   },
   TemporalAbsoluteToString: (absolute, timeZone) => {
-    let dateTime;
-    if (typeof timeZone.getDateTimeFor === 'function') {
-      dateTime = timeZone.getDateTimeFor(absolute);
-    } else {
-      const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-      dateTime = TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, absolute);
-    }
+    const dateTime = ES.GetTemporalDateTimeFor(timeZone, absolute);
     const year = ES.ISOYearString(dateTime.year);
     const month = ES.ISODateTimePartString(dateTime.month);
     const day = ES.ISODateTimePartString(dateTime.day);

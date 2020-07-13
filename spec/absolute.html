@@ -484,8 +484,8 @@
         1. Assert: Type(_absolute_) is Object.
         1. Assert: _absolute_ has an [[InitializedTemporalAbsolute]] internal slot.
         1. Assert?: Type(_timeZone_) is Object.
-        1. Let _offset_ be ? GetOffsetStringFor(_timeZone_, _absolute_).
         1. Let _name_ be ? TimeZoneToString(_timeZone_).
+        1. Let _offset_ be ? GetOffsetStringFor(_timeZone_, _absolute_).
         1. If _name_ is *"UTC"*, then
           1. Return  *"Z"*.
         1. If _name_ is _offset_, then
