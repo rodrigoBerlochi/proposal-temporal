@@ -2,6 +2,7 @@ const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const ObjectAssign = Object.assign;
 
 import bigInt from 'big-integer';
+import Call from 'es-abstract/2019/Call.js';
 import SpeciesConstructor from 'es-abstract/2019/SpeciesConstructor.js';
 import ToInteger from 'es-abstract/2019/ToInteger.js';
 import ToNumber from 'es-abstract/2019/ToNumber.js';
@@ -49,6 +50,7 @@ const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 import * as PARSE from './regex.mjs';
 
 const ES2019 = {
+  Call,
   SpeciesConstructor,
   ToInteger,
   ToNumber,
@@ -556,6 +558,21 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalYearMonthRecord: (bag) => {
     return ES.ToRecord(bag, [['era', undefined], ['month'], ['year']]);
+  },
+  TimeZoneFrom: (temporalTimeZoneLike) => {
+    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+    const from = TemporalTimeZone.from;
+    if (from === undefined) {
+      from = GetIntrinsic('%Temporal.TimeZone.from%');
+    }
+    return ES.Call(from, TemporalTimeZone, temporalTimeZoneLike);
+  },
+  GetTemporalDateTimeFor: (timeZone, absolute, calendar) => {
+    let getDateTimeFor = timeZone.getDateTimeFor;
+    if (getDateTimeFor === 'undefined') {
+      getDateTimeFor = GetIntrinsic('%Temporal.TimeZone.prototype.getDateTimeFor%');
+    }
+    return ES.Call(getDateTimeFor, timeZone, [this, calendar]);
   },
   ISOTimeZoneString: (timeZone, absolute) => {
     let offset;
